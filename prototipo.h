@@ -1,6 +1,9 @@
 #ifndef PROTOTIPO_H
 #define PROTOTIPO_H
 
+// Mapeia os endereços de memória para serem compatíveis com o AXI bridge
+void map_mem();
+
 // Escreve valores em uma matriz.
 // num1 e num2 são os dados (8 bits cada) de um elemento e do elemento seguinte e id identifica onde escrever(matriz, linha coluna).
 void write_matrix(signed char num1, signed char num2, signed char id);
