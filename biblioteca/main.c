@@ -3,11 +3,11 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
-//#include "./hps_0.h"
+#include "./hps_0.h"
 
 #define LW_BRIDGE_BASE 0xFF200000
 #define LW_BRIDGE_SPAN 0x1000
-extern volatile uint32_t *FPGA_ADSS;
+extern volatile uint32_t *SEG7_ptr;
 
 
 int init_fpga_mapping() {
@@ -17,14 +17,14 @@ int init_fpga_mapping() {
         return -1;
     }
 
-    void *mapped_base = mmap(NULL, LW_BRIDGE_SPAN, PROT_READ | PROT_WRITE, MAP_SHARED, fd, LW_BRIDGE_BASE);
-    if (mapped_base == MAP_FAILED) {
+    void *LW_virtual = mmap(NULL, LW_BRIDGE_SPAN, PROT_READ | PROT_WRITE, MAP_SHARED, fd, LW_BRIDGE_BASE);
+    if (LW_virtual == MAP_FAILED) {
         perror("mmap");
         close(fd);
         return -1;
     }
 
-    FPGA_ADSS = (volatile uint32_t *)mapped_base;
+    SEG7_ptr = (volatile uint32_t *)(LW_virtual + SEG7_PIO_0_BASE);
     close(fd);
     return 0;
 }
