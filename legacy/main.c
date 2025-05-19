@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "coprocessor.h"
+#include "biblioteca.h"
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -31,27 +31,37 @@ int init_fpga_mapping() {
 
 
 
-uint8_t read_element(){
-    uint8_t linha, coluna;
-    printf("Linha da matriz (0 a 4)\n");
-    scanf("%hhu", &linha);
-    printf("Coluna da matriz (0 a 4)\n");
-    scanf("%hhu", &coluna);
-    return load_matrix(linha, coluna);
+uint8_t make_id(uint8_t matriz, uint8_t linha, uint8_t coluna) {
+    return ((matriz & 0x03) << 6) | ((linha & 0x07) << 3) | (coluna & 0x07);
 }
 
-void write_elements(){
-    uint8_t matriz_id, linha, coluna;
-    int8_t num;
-    printf("Id da matrix (0 a 1)\n");
+uint8_t read_element(){
+    uint8_t matriz_id, linha, coluna, id;
+    printf("Id da matrix (0 a 2)\n");
     scanf("%hhu", &matriz_id);
     printf("Linha da matriz (0 a 4)\n");
     scanf("%hhu", &linha);
     printf("Coluna da matriz (0 a 4)\n");
     scanf("%hhu", &coluna);
+    id = make_id(matriz_id, linha, coluna);
+    return read_matrix(id);
+}
+
+void write_elements(){
+    uint8_t matriz_id, linha, coluna, id;
+    int8_t num1, num2;
+    printf("Id da matrix (0 a 2)\n");
+    scanf("%hhu", &matriz_id);
+    printf("Linha da matriz (0 a 4)\n");
+    scanf("%hhu", &linha);
+    printf("Coluna da matriz (0 a 4)\n");
+    scanf("%hhu", &coluna);
+    id = make_id(matriz_id, linha, coluna);
     printf("Primeiro elemento:\n");
-    scanf("%hhd", &num);
-    store_matrix(num, linha, coluna, matriz_id);
+    scanf("%hhd", &num1);
+    printf("Segundo elemento:\n");
+    scanf("%hhd", &num2);
+    write_matrix(num1, num2, id);
 }
 
 
@@ -78,14 +88,7 @@ void menu(){
         switch (opcao)
         {
         case 1:
-            uint8_t matriz_id, linha, coluna, id;
-            printf("Id da matrix (0 ou 1)\n");
-            scanf("%hhu", &matriz_id);
-            printf("Linha da matriz (0 a 4)\n");
-            scanf("%hhu", &linha);
-            printf("Coluna da matriz (0 a 4)\n");
-            scanf("%hhu", &coluna);
-            load_matrix();
+            read_element();
             printf("Operação: Leitura de elemento realizada.\n");
             break;
         case 2:
