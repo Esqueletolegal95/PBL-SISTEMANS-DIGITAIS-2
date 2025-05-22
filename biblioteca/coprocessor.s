@@ -25,7 +25,7 @@
 .global not_operation
 .type not_operation, %function
 
-.extern SEG7_ptr
+.extern INSTRUCTION_ptr
 
 @ ------------------------- NOP (000)
 not_operation:
@@ -157,7 +157,7 @@ instruction:
     SUB SP, SP, #4
     STR R1, [SP]
 
-    LDR R1, =SEG7_ptr
+    LDR R1, =INSTRUCTION_ptr
     LDR R1, [R1]        
     STR R0, [R1]       
 
