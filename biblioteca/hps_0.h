@@ -54,28 +54,100 @@
 #define ONCHIP_MEMORY2_0_MEMORY_INFO_MEM_INIT_FILENAME soc_system_onchip_memory2_0
 
 /*
- * Macros for device 'seg7_pio_0', class 'altera_avalon_pio'
- * The macros are prefixed with 'SEG7_PIO_0_'.
+ * Macros for device 'instruction_pio_0', class 'altera_avalon_pio'
+ * The macros are prefixed with 'INSTRUCTION_PIO_0_'.
  * The prefix is the slave descriptor.
  */
-#define SEG7_PIO_0_COMPONENT_TYPE altera_avalon_pio
-#define SEG7_PIO_0_COMPONENT_NAME seg7_pio_0
-#define SEG7_PIO_0_BASE 0x0
-#define SEG7_PIO_0_SPAN 16
-#define SEG7_PIO_0_END 0xf
-#define SEG7_PIO_0_BIT_CLEARING_EDGE_REGISTER 0
-#define SEG7_PIO_0_BIT_MODIFYING_OUTPUT_REGISTER 0
-#define SEG7_PIO_0_CAPTURE 0
-#define SEG7_PIO_0_DATA_WIDTH 32
-#define SEG7_PIO_0_DO_TEST_BENCH_WIRING 0
-#define SEG7_PIO_0_DRIVEN_SIM_VALUE 0
-#define SEG7_PIO_0_EDGE_TYPE NONE
-#define SEG7_PIO_0_FREQ 50000000
-#define SEG7_PIO_0_HAS_IN 0
-#define SEG7_PIO_0_HAS_OUT 1
-#define SEG7_PIO_0_HAS_TRI 0
-#define SEG7_PIO_0_IRQ_TYPE NONE
-#define SEG7_PIO_0_RESET_VALUE 1023
+#define INSTRUCTION_PIO_0_COMPONENT_TYPE altera_avalon_pio
+#define INSTRUCTION_PIO_0_COMPONENT_NAME instruction_pio_0
+#define INSTRUCTION_PIO_0_BASE 0x0
+#define INSTRUCTION_PIO_0_SPAN 16
+#define INSTRUCTION_PIO_0_END 0xf
+#define INSTRUCTION_PIO_0_BIT_CLEARING_EDGE_REGISTER 0
+#define INSTRUCTION_PIO_0_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define INSTRUCTION_PIO_0_CAPTURE 0
+#define INSTRUCTION_PIO_0_DATA_WIDTH 18
+#define INSTRUCTION_PIO_0_DO_TEST_BENCH_WIRING 0
+#define INSTRUCTION_PIO_0_DRIVEN_SIM_VALUE 0
+#define INSTRUCTION_PIO_0_EDGE_TYPE NONE
+#define INSTRUCTION_PIO_0_FREQ 50000000
+#define INSTRUCTION_PIO_0_HAS_IN 1
+#define INSTRUCTION_PIO_0_HAS_OUT 0
+#define INSTRUCTION_PIO_0_HAS_TRI 0
+#define INSTRUCTION_PIO_0_IRQ_TYPE NONE
+#define INSTRUCTION_PIO_0_RESET_VALUE 0
+
+/*
+ * Macros for device 'wr_pio_0', class 'altera_avalon_pio'
+ * The macros are prefixed with 'WR_PIO_0_'.
+ * The prefix is the slave descriptor.
+ */
+#define WR_PIO_0_COMPONENT_TYPE altera_avalon_pio
+#define WR_PIO_0_COMPONENT_NAME wr_pio_0
+#define WR_PIO_0_BASE 0x10
+#define WR_PIO_0_SPAN 16
+#define WR_PIO_0_END 0x1f
+#define WR_PIO_0_BIT_CLEARING_EDGE_REGISTER 0
+#define WR_PIO_0_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define WR_PIO_0_CAPTURE 0
+#define WR_PIO_0_DATA_WIDTH 1
+#define WR_PIO_0_DO_TEST_BENCH_WIRING 0
+#define WR_PIO_0_DRIVEN_SIM_VALUE 0
+#define WR_PIO_0_EDGE_TYPE NONE
+#define WR_PIO_0_FREQ 50000000
+#define WR_PIO_0_HAS_IN 1
+#define WR_PIO_0_HAS_OUT 0
+#define WR_PIO_0_HAS_TRI 0
+#define WR_PIO_0_IRQ_TYPE NONE
+#define WR_PIO_0_RESET_VALUE 0
+
+/*
+ * Macros for device 'data_out_pio_0', class 'altera_avalon_pio'
+ * The macros are prefixed with 'DATA_OUT_PIO_0_'.
+ * The prefix is the slave descriptor.
+ */
+#define DATA_OUT_PIO_0_COMPONENT_TYPE altera_avalon_pio
+#define DATA_OUT_PIO_0_COMPONENT_NAME data_out_pio_0
+#define DATA_OUT_PIO_0_BASE 0x20
+#define DATA_OUT_PIO_0_SPAN 16
+#define DATA_OUT_PIO_0_END 0x2f
+#define DATA_OUT_PIO_0_BIT_CLEARING_EDGE_REGISTER 0
+#define DATA_OUT_PIO_0_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define DATA_OUT_PIO_0_CAPTURE 0
+#define DATA_OUT_PIO_0_DATA_WIDTH 8
+#define DATA_OUT_PIO_0_DO_TEST_BENCH_WIRING 0
+#define DATA_OUT_PIO_0_DRIVEN_SIM_VALUE 0
+#define DATA_OUT_PIO_0_EDGE_TYPE NONE
+#define DATA_OUT_PIO_0_FREQ 50000000
+#define DATA_OUT_PIO_0_HAS_IN 0
+#define DATA_OUT_PIO_0_HAS_OUT 1
+#define DATA_OUT_PIO_0_HAS_TRI 0
+#define DATA_OUT_PIO_0_IRQ_TYPE NONE
+#define DATA_OUT_PIO_0_RESET_VALUE 0
+
+/*
+ * Macros for device 'flags_pio_0', class 'altera_avalon_pio'
+ * The macros are prefixed with 'FLAGS_PIO_0_'.
+ * The prefix is the slave descriptor.
+ */
+#define FLAGS_PIO_0_COMPONENT_TYPE altera_avalon_pio
+#define FLAGS_PIO_0_COMPONENT_NAME flags_pio_0
+#define FLAGS_PIO_0_BASE 0x30
+#define FLAGS_PIO_0_SPAN 16
+#define FLAGS_PIO_0_END 0x3f
+#define FLAGS_PIO_0_BIT_CLEARING_EDGE_REGISTER 0
+#define FLAGS_PIO_0_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define FLAGS_PIO_0_CAPTURE 0
+#define FLAGS_PIO_0_DATA_WIDTH 3
+#define FLAGS_PIO_0_DO_TEST_BENCH_WIRING 0
+#define FLAGS_PIO_0_DRIVEN_SIM_VALUE 0
+#define FLAGS_PIO_0_EDGE_TYPE NONE
+#define FLAGS_PIO_0_FREQ 50000000
+#define FLAGS_PIO_0_HAS_IN 0
+#define FLAGS_PIO_0_HAS_OUT 1
+#define FLAGS_PIO_0_HAS_TRI 0
+#define FLAGS_PIO_0_IRQ_TYPE NONE
+#define FLAGS_PIO_0_RESET_VALUE 0
 
 /*
  * Macros for device 'sysid_qsys', class 'altera_avalon_sysid_qsys'
@@ -88,7 +160,7 @@
 #define SYSID_QSYS_SPAN 8
 #define SYSID_QSYS_END 0x10007
 #define SYSID_QSYS_ID 2899645186
-#define SYSID_QSYS_TIMESTAMP 1747424476
+#define SYSID_QSYS_TIMESTAMP 1747921639
 
 /*
  * Macros for device 'jtag_uart', class 'altera_avalon_jtag_uart'

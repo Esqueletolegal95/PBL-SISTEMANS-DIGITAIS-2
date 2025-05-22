@@ -122,10 +122,10 @@ void menu(){
             printf("Operação: Multiplicação de matrizes realizada.\n");
             break;
         case 7:
-            printf("%hhu", FLAGS_ptr);
+            printf("%u\n", *(uint16_t*)FLAGS_ptr);
             break;
         case 8:
-            printf("%hhd", DATA_OUT_ptr);
+            printf("%u\n", *(int8_t*)DATA_OUT_ptr);
             break;
         default:
             printf("Opção inválida, tente novamente.\n");
