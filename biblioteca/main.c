@@ -7,7 +7,10 @@
 
 #define LW_BRIDGE_BASE 0xFF200000
 #define LW_BRIDGE_SPAN 0x1000
-extern volatile uint32_t *SEG7_ptr;
+volatile uint32_t *INSTRUCTION_ptr;
+volatile uint32_t *FLAGS_ptr;
+volatile uint32_t *WR_ptr;
+volatile uint32_t *DATA_OUT_ptr;
 
 
 int init_fpga_mapping() {
@@ -24,7 +27,10 @@ int init_fpga_mapping() {
         return -1;
     }
 
-    SEG7_ptr = (volatile uint32_t *)(LW_virtual + SEG7_PIO_0_BASE);
+    INSTRUCTION_ptr = (volatile uint32_t *)(LW_virtual + INSTRUCTION_PIO_0_BASE);
+    FLAGS_ptr = (volatile uint32_t *)(LW_virtual + FLAGS_PIO_0_BASE);
+    WR_ptr = (volatile uint32_t *)(LW_virtual + WR_PIO_0_BASE);
+    DATA_OUT_ptr = (volatile uint32_t *)(LW_virtual + DATA_OUT_PIO_0_BASE);
     close(fd);
     return 0;
 }
@@ -51,7 +57,9 @@ void write_elements(){
     scanf("%hhu", &coluna);
     printf("Primeiro elemento:\n");
     scanf("%hhd", &num);
+    *WR_ptr = 1;
     store_matrix(num, linha, coluna, matriz_id);
+    *WR_ptr = 0;
 }
 
 
@@ -66,18 +74,23 @@ void menu(){
         printf("4 - somar matrizes\n");
         printf("5 - subtrair matrizes\n");
         printf("6 - multiplicar matrizes\n");
-        printf("7 - matriz transposta\n");
-        printf("8 - matriz oposta\n");
-        printf("9 - determinante 2x2\n");
-        printf("10 - determinante 3x3\n");
-        printf("11 - determinante 4x4\n");
-        printf("12 - determinante 5x5\n");
+        printf("7 - mostrar flags" );
+        printf("8 - mostrar saída \n");
         printf("Escolha: ");
         scanf("%d", &opcao);
 
         switch (opcao)
         {
         case 1:
+            uint8_t linha, coluna;
+            printf("Linha da matriz (0 a 4)\n");
+            scanf("%hhu", &linha);
+            printf("Coluna da matriz (0 a 4)\n");
+            scanf("%hhu", &coluna);
+            load_matrix(linha, coluna);
+            printf("Operação: Leitura de elemento realizada.\n");
+            break;
+        case 2:
             uint8_t matriz_id, linha, coluna, id;
             printf("Id da matrix (0 ou 1)\n");
             scanf("%hhu", &matriz_id);
@@ -85,10 +98,6 @@ void menu(){
             scanf("%hhu", &linha);
             printf("Coluna da matriz (0 a 4)\n");
             scanf("%hhu", &coluna);
-            load_matrix();
-            printf("Operação: Leitura de elemento realizada.\n");
-            break;
-        case 2:
             write_elements();
             printf("Operação: Escrita de elementos realizada.\n");
             break;
@@ -113,28 +122,10 @@ void menu(){
             printf("Operação: Multiplicação de matrizes realizada.\n");
             break;
         case 7:
-            trans_matrix();
-            printf("Operação: Transposição de matriz realizada.\n");
+            printf("%hhu", FLAGS_ptr);
             break;
         case 8:
-            oppo_matrix();
-            printf("Operação: Matriz oposta calculada.\n");
-            break;
-        case 9:
-            det2_matrix();
-            printf("Operação: Determinante 2x2 calculado.\n");
-            break;
-        case 10:
-            det3_matrix();
-            printf("Operação: Determinante 3x3 calculado.\n");
-            break;
-        case 11:
-            det4_matrix();
-            printf("Operação: Determinante 4x4 calculado.\n");
-            break;
-        case 12:
-            det5_matrix();
-            printf("Operação: Determinante 5x5 calculado.\n");
+            printf("%hhd", DATA_OUT_ptr);
             break;
         default:
             printf("Opção inválida, tente novamente.\n");
