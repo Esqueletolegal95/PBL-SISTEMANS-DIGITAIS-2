@@ -48,28 +48,37 @@ not_operation:
 
 @ ------------------------- LOAD (001)
 @ R0 = coluna
-@ R1 = linha
+@ R1 = coluna
+@ R2 = ponteiro para MatrixResult (struct de 3 bytes: int8_t + uint16_t)
 load_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    LSL R0, R0, #3      @ coluna << 3 → bits 3–5
-    LSL R1, R1, #6      @ linha << 6  → bits 6–8
-    ADD R0, R0, R1
-    ADD R0, R0, #1      @ opcode = 001
+    LSL R1, R1, #3      @ coluna << 3 → bits 3–5 (antes R0 era coluna, agora R1)
+    LSL R0, R0, #6      @ linha << 6  → bits 6–8
 
-    BL instruction
+    ADD R0, R1, R0      @ R0 = coluna shifted + linha shifted
+    ADD R0, R0, #1      @ opcode = 001 (LOAD)
 
-    LDR R1 =DATA_OUT_ptr
-    LDR R1, [R1]
-    LDRSB R0, [R1]
+    BL instruction      @ chama coprocessador
 
-    LDR R1, =FLAGS_ptr
-    LDR R1, [R1]        @ flags retornadas em R1
+    LDR R3, =DATA_OUT_ptr
+    LDR R3, [R3]
+    LDRSB R1, [R3]      @ lê o valor (int8_t) em R1
+
+    LDR R3, =FLAGS_ptr
+    LDR R3, [R3]        @ lê os flags (uint16_t) em R3
+
+    @ Armazena no ponteiro da struct passado em R2
+    STRB R1, [R2]       @ MatrixResult.value (int8_t)
+    STRH R3, [R2, #1]   @ MatrixResult.flags (uint16_t)
+
+    MOV R0, R3          @ retorna flags em R0 (opcional)
 
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
+
 
 
 @ ------------------------- STORE (010)
