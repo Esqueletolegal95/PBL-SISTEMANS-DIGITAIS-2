@@ -124,6 +124,7 @@ void menu(){
         printf("7 - mostrar flags\n" );
         printf("8 - mostrar saída \n");
         printf("9- imprime matriz\n");
+        printf("10 - gerar matriz teste\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
 
@@ -169,6 +170,7 @@ void menu(){
             break;
         case 10:
             printf("10 - preencher matriz 0 com valores de teste\n");
+            preencher_matriz_teste();
             break;
         default:
             printf("Opção inválida, tente novamente.\n");
