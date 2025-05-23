@@ -52,6 +52,34 @@ int init_fpga_mapping() {
     return 0;
 }
 
+void preencher_matriz_teste() {
+    printf("✨ Preenchendo matriz 0 com valores de teste...\n");
+
+    for (uint8_t linha = 0; linha < 5; linha++) {
+        for (uint8_t coluna = 0; coluna < 5; coluna++) {
+            int8_t valor = linha * 5 + coluna;  // só um padrão simples pra ver que tá tudo certo
+            *WR_ptr = 1;
+            store_matrix(valor, linha, coluna, 0);
+            *WR_ptr = 0;
+        }
+    }
+
+    printf("✔️ Matriz preenchida com sucesso! Agora use a opção 9 pra ver\n");
+}
+
+
+
+void print_matrix(int tamanho) {
+    printf("Conteúdo da matriz 0:\n");
+    for (uint8_t i = 0; i < tamanho; i++) {
+        for (uint8_t j = 0; j < tamanho; j++) {
+            load_matrix(i, j);
+            int8_t valor = *(int8_t *)DATA_OUT_ptr;
+            printf("%4d ", valor);  // espaço fixo pra alinhamento bonitinho, tá?
+        }
+        printf("\n");
+    }
+}
 
 
 void read_element(){
@@ -95,6 +123,7 @@ void menu(){
         printf("6 - multiplicar matrizes\n");
         printf("7 - mostrar flags\n" );
         printf("8 - mostrar saída \n");
+        printf("9- imprime matriz\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
 
@@ -134,6 +163,12 @@ void menu(){
             break;
         case 8:
             printf("%u\n", *(int8_t*)DATA_OUT_ptr);
+            break;
+        case 9:
+            print_matrix(5);
+            break;
+        case 10:
+            printf("10 - preencher matriz 0 com valores de teste\n");
             break;
         default:
             printf("Opção inválida, tente novamente.\n");
