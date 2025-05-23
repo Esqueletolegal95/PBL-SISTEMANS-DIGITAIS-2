@@ -13,6 +13,23 @@ volatile uint32_t *WR_ptr;
 volatile uint32_t *DATA_OUT_ptr;
 
 
+
+void checar_flags(uint16_t flags) {
+    if (flags & FLAG_DONE) {
+        printf("[✔️] Operação concluída com sucesso.\n");
+    }
+    if (flags & FLAG_OVERFLOW) {
+        printf("[⚠️] Atenção: overflow ocorreu durante a operação!\n");
+    }
+    if (flags & FLAG_INCORRECT_ADDR) {
+        printf("[❌] Erro: endereço inválido acessado!\n");
+    }
+    if (!(flags & (FLAG_DONE | FLAG_OVERFLOW | FLAG_INCORRECT_ADDR))) {
+        printf("[ℹ️] Nenhuma flag especial foi setada.\n");
+    }
+}
+
+
 int init_fpga_mapping() {
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
     if (fd == -1) {
@@ -37,13 +54,14 @@ int init_fpga_mapping() {
 
 
 
-uint8_t read_element(){
+void read_element(){
     uint8_t linha, coluna;
     printf("Linha da matriz (0 a 4)\n");
     scanf("%hhu", &linha);
     printf("Coluna da matriz (0 a 4)\n");
     scanf("%hhu", &coluna);
-    return load_matrix(linha, coluna);
+    load_matrix(linha, coluna);
+    return;
 }
 
 void write_elements(){
@@ -60,6 +78,7 @@ void write_elements(){
     *WR_ptr = 1;
     store_matrix(num, linha, coluna, matriz_id);
     *WR_ptr = 0;
+    return;
 }
 
 
@@ -74,7 +93,7 @@ void menu(){
         printf("4 - somar matrizes\n");
         printf("5 - subtrair matrizes\n");
         printf("6 - multiplicar matrizes\n");
-        printf("7 - mostrar flags" );
+        printf("7 - mostrar flags\n" );
         printf("8 - mostrar saída \n");
         printf("Escolha: ");
         scanf("%d", &opcao);
@@ -82,22 +101,11 @@ void menu(){
         switch (opcao)
         {
         case 1:
-            uint8_t linha, coluna;
-            printf("Linha da matriz (0 a 4)\n");
-            scanf("%hhu", &linha);
-            printf("Coluna da matriz (0 a 4)\n");
-            scanf("%hhu", &coluna);
-            load_matrix(linha, coluna);
+            read_element();
+            printf("%u\n", *(int8_t*)DATA_OUT_ptr);
             printf("Operação: Leitura de elemento realizada.\n");
             break;
         case 2:
-            uint8_t matriz_id, linha, coluna, id;
-            printf("Id da matrix (0 ou 1)\n");
-            scanf("%hhu", &matriz_id);
-            printf("Linha da matriz (0 a 4)\n");
-            scanf("%hhu", &linha);
-            printf("Coluna da matriz (0 a 4)\n");
-            scanf("%hhu", &coluna);
             write_elements();
             printf("Operação: Escrita de elementos realizada.\n");
             break;
@@ -110,7 +118,7 @@ void menu(){
             break;
         }
         case 4:
-            sum_matrix();
+            add_matrix();
             printf("Operação: Soma de matrizes realizada.\n");
             break;
         case 5:
@@ -122,7 +130,7 @@ void menu(){
             printf("Operação: Multiplicação de matrizes realizada.\n");
             break;
         case 7:
-            printf("%u\n", *(uint16_t*)FLAGS_ptr);
+            printf("Flags: 0x%04X\n", *(uint16_t*)FLAGS_ptr);
             break;
         case 8:
             printf("%u\n", *(int8_t*)DATA_OUT_ptr);
