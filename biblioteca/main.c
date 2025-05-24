@@ -1,9 +1,12 @@
 #include <stdio.h>
-#include "coprocessor.h"
+#include <stdint.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <stdbool.h>
 #include "./hps_0.h"
+#include "coprocessor.h"
 
 #define LW_BRIDGE_BASE 0xFF200000
 #define LW_BRIDGE_SPAN 0x1000
@@ -15,10 +18,30 @@ volatile uint32_t *WR_ptr;
 volatile uint32_t *DATA_OUT_ptr;
 
 #define CHECK_FLAGS(f) do { \
-    if ((f) & FLAG_DONE) { printf("✅ Operação concluída com sucesso!\n"); } \
-    if ((f) & FLAG_OVERFLOW) { printf("⚠️ Overflow detectado!\n"); } \
-    if ((f) & FLAG_INCORRECT_ADDR) { printf("❌ Endereço incorreto acessado!\n"); } \
-} while(0)
+    if ((f) & FLAG_DONE) printf("✅ Operação concluída com sucesso!\n"); \
+    if ((f) & FLAG_OVERFLOW) printf("⚠️ Overflow detectado!\n"); \
+    if ((f) & FLAG_INCORRECT_ADDR) printf("❌ Endereço incorreto acessado!\n"); \
+} while (0)
+
+volatile bool running = true;
+
+void* monitor_flags(void *arg) {
+    uint16_t last_flags = 0;
+
+    while (running) {
+        uint16_t current_flags = *(uint16_t*)FLAGS_ptr;
+
+        if (current_flags != last_flags && current_flags != 0) {
+            printf("\n📍 [Thread Flags] Flags alteradas: 0x%04X\n", current_flags);
+            CHECK_FLAGS(current_flags);
+            last_flags = current_flags;
+        }
+
+        usleep(200000); // 200ms
+    }
+
+    return NULL;
+}
 
 int init_fpga_mapping() {
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -44,11 +67,9 @@ int init_fpga_mapping() {
 
 void preencher_matriz_teste() {
     printf("✨ Preenchendo matriz 0 com valores de teste...\n");
-    printf("DEBUG: MATRIX_SIZE = %d\n", MATRIX_SIZE);
 
     for (int linha = 0; linha < MATRIX_SIZE; linha++) {
         for (int coluna = 0; coluna < MATRIX_SIZE; coluna++) {
-            printf("DEBUG: linha = %d, coluna = %d\n", linha, coluna);
             int8_t valor = linha * MATRIX_SIZE + coluna;
             store_matrix(valor, linha, coluna, 0);
         }
@@ -57,57 +78,49 @@ void preencher_matriz_teste() {
     printf("✔️ Matriz preenchida com sucesso! Agora use a opção 9 pra ver\n");
 }
 
-
 void print_matrix(int tamanho) {
-    MatrixResult res;
     printf("Conteúdo da matriz 0:\n");
     for (uint8_t i = 0; i < tamanho; i++) {
         for (uint8_t j = 0; j < tamanho; j++) {
-            load_matrix(i, j, &res);
-            printf("%4d ", res.value);
+            int8_t val = load_matrix(i, j);
+            printf("%4d ", val);
         }
         printf("\n");
     }
 }
 
-uint16_t read_element() {
-    MatrixResult res;
+void read_element() {
     uint8_t linha, coluna;
     printf("Linha da matriz (0 a 4):\n");
     scanf("%hhu", &linha);
-    getchar(); // limpa buffer
+    getchar();
     printf("Coluna da matriz (0 a 4):\n");
     scanf("%hhu", &coluna);
-    getchar(); // limpa buffer
+    getchar();
 
-    uint16_t flags = load_matrix(linha, coluna, &res);
-    printf("Valor lido: %d\n", res.value);
-    return flags;
+    int8_t val = load_matrix(linha, coluna);
+    printf("Valor lido: %d\n", val);
 }
 
-uint16_t write_elements() {
+void write_elements() {
     uint8_t matriz_id, linha, coluna;
     int8_t num;
     printf("Id da matriz (0 a 1):\n");
-    scanf("%hhu", &matriz_id);
-    getchar();
+    scanf("%hhu", &matriz_id); getchar();
     printf("Linha da matriz (0 a 4):\n");
-    scanf("%hhu", &linha);
-    getchar();
+    scanf("%hhu", &linha); getchar();
     printf("Coluna da matriz (0 a 4):\n");
-    scanf("%hhu", &coluna);
-    getchar();
+    scanf("%hhu", &coluna); getchar();
     printf("Elemento a ser escrito:\n");
-    scanf("%hhd", &num);
-    getchar();
+    scanf("%hhd", &num); getchar();
 
-    return store_matrix(num, linha, coluna, matriz_id);
+    store_matrix(num, linha, coluna, matriz_id);
 }
 
 void menu() {
     while (1) {
         int opcao;
-        printf("\nEscolha uma opcao:\n");
+        printf("\nEscolha uma opção:\n");
         printf("1 - Ler elemento na matriz\n");
         printf("2 - Escrever elementos na matriz\n");
         printf("3 - Multiplicar matriz por um escalar\n");
@@ -118,49 +131,26 @@ void menu() {
         printf("8 - Mostrar saída\n");
         printf("9 - Imprimir matriz\n");
         printf("10 - Gerar matriz teste\n");
+        printf("11 - Sair\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
-        getchar(); // limpa buffer após leitura da opção
-
-        uint16_t flags = 0;
+        getchar();
 
         switch (opcao) {
-            case 1: {
-                flags = read_element();
-                CHECK_FLAGS(flags);
-                break;
-            }
-            case 2: {
-                flags = write_elements();
-                CHECK_FLAGS(flags);
-                break;
-            }
+            case 1: read_element(); break;
+            case 2: write_elements(); break;
             case 3: {
                 int8_t num;
                 printf("Digite o escalar:\n");
-                scanf("%hhd", &num);
-                getchar();
-                flags = mult_matrix_esc(num);
-                CHECK_FLAGS(flags);
+                scanf("%hhd", &num); getchar();
+                mult_matrix_esc(num);
                 break;
             }
-            case 4: {
-                flags = add_matrix();
-                CHECK_FLAGS(flags);
-                break;
-            }
-            case 5: {
-                flags = sub_matrix();
-                CHECK_FLAGS(flags);
-                break;
-            }
-            case 6: {
-                flags = mult_matrix();
-                CHECK_FLAGS(flags);
-                break;
-            }
+            case 4: add_matrix(); break;
+            case 5: sub_matrix(); break;
+            case 6: mult_matrix(); break;
             case 7: {
-                flags = *(uint16_t*)FLAGS_ptr;
+                uint16_t flags = *(uint16_t*)FLAGS_ptr;
                 printf("Flags atuais: 0x%04X\n", flags);
                 CHECK_FLAGS(flags);
                 break;
@@ -168,25 +158,22 @@ void menu() {
             case 8: {
                 int8_t val = *(int8_t*)DATA_OUT_ptr;
                 printf("Saída: %d\n", val);
-                flags = *(uint16_t*)FLAGS_ptr;
-                CHECK_FLAGS(flags);
                 break;
             }
             case 9: {
                 int num;
-                printf("Digite o tamanho da matriz quadrada");
-                scanf("%d", &num);
-                getchar(); // limpa '\n' restante
+                printf("Digite o tamanho da matriz quadrada: ");
+                scanf("%d", &num); getchar();
                 print_matrix(num);
                 break;
             }
-            case 10: {
-                preencher_matriz_teste();
-                break;
-            }
+            case 10: preencher_matriz_teste(); break;
+            case 11:
+                running = false;
+                printf("Saindo do programa...\n");
+                return;
             default:
                 printf("Opção inválida, tente novamente.\n");
-                break;
         }
     }
 }
@@ -197,6 +184,14 @@ int main() {
         return -1;
     }
 
-    menu(); // loop do menu
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, NULL, monitor_flags, NULL) != 0) {
+        perror("pthread_create");
+        return -1;
+    }
+
+    menu(); // loop principal
+
+    pthread_join(thread_id, NULL);
     return 0;
 }
