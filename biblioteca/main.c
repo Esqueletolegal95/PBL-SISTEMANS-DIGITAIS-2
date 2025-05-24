@@ -176,7 +176,7 @@ void menu() {
             case 9:
                 preencher_matriz_teste();
                 break;
-            case 11: {
+            case 10: {
                 reset_matrix();
                 break;
                 }

@@ -44,45 +44,78 @@ not_operation:
 @ ------------------------- LOAD (001)
 @ R0 = coluna
 @ R1 = linha
+
 load_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    LSL R0, R0, #3      @ coluna << 3 → bits 3–5
-    LSL R1, R1, #6      @ linha << 6  → bits 6–8
-    ADD R0, R0, R1
-    ADD R0, R0, #1      @ opcode = 001
+    MOV R2, #0
 
+    @ Campo: coluna (3 bits) << 3 → bits 3–5
+    AND R0, R0, #0x07
+    LSL R0, R0, #3
+    ORR R2, R2, R0
+
+    @ Campo: linha (3 bits) << 6 → bits 6–8
+    AND R1, R1, #0x07
+    LSL R1, R1, #6
+    ORR R2, R2, R1
+
+    @ Opcode = 0b001 (LOAD)
+    ORR R2, R2, #1
+
+    MOV R0, R2
     BL instruction
+
+    @ Idealmente, esperar FLAG_DONE aqui!
 
     LDR R3, =DATA_OUT_ptr
     LDR R3, [R3]
-    LDRSB R0, [R3]      @ lê o valor da matriz como int8_t e coloca em R0
+    LDRSB R0, [R3]      @ lê valor com sinal
 
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
 
 
+
 @ ------------------------- STORE (010)
 @ R0 = valor
 @ R1 = linha, R2 = coluna, R3 = matriz
+
+
 store_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    LSL R0, R0, #10       @ valor << 10
-    LSL R1, R1, #7        @ linha << 7
-    ADD R0, R0, R1
+    @ Zera o registrador de instrução
+    MOV R4, #0
 
-    LSL R2, R2, #4        @ coluna << 4
-    ADD R0, R0, R2
+    @ Campo: valor (8 bits) << 10 → bits 10–17
+    AND R0, R0, #0xFF        @ Garante valor com sinal correto (int8_t para 8 bits)
+    LSL R0, R0, #10
+    ORR R4, R4, R0
 
-    LSL R3, R3, #3        @ matriz << 3
-    ADD R0, R0, R3
+    @ Campo: linha (3 bits) << 7 → bits 7–9
+    AND R1, R1, #0x07
+    LSL R1, R1, #7
+    ORR R4, R4, R1
 
-    ADD R0, R0, #2        @ opcode = 010 (STORE)
+    @ Campo: coluna (3 bits) << 4 → bits 4–6
+    AND R2, R2, #0x07
+    LSL R2, R2, #4
+    ORR R4, R4, R2
 
+    @ Campo: matriz (1 bit) << 3 → bit 3
+    AND R3, R3, #0x01
+    LSL R3, R3, #3
+    ORR R4, R4, R3
+
+    @ Campo: opcode (3 bits) = 0b010 → bits 0–2
+    ORR R4, R4, #2
+
+    @ Chama função que escreve no registrador de instrução
+    MOV R0, R4
     BL instruction
 
     LDR LR, [SP]
