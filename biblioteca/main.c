@@ -7,6 +7,8 @@
 
 #define LW_BRIDGE_BASE 0xFF200000
 #define LW_BRIDGE_SPAN 0x1000
+#define MATRIX_SIZE 5
+
 volatile uint32_t *INSTRUCTION_ptr;
 volatile uint32_t *FLAGS_ptr;
 volatile uint32_t *WR_ptr;
@@ -43,12 +45,10 @@ int init_fpga_mapping() {
 void preencher_matriz_teste() {
     printf("✨ Preenchendo matriz 0 com valores de teste...\n");
 
-    for (uint8_t linha = 0; linha < 5; linha++) {
-        for (uint8_t coluna = 0; coluna < 5; coluna++) {
-            int8_t valor = linha * 5 + coluna;  // padrão simples só pra ver que tá tudo certo
-            *WR_ptr = 1;
+    for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
+        for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
+            int8_t valor = linha * MATRIX_SIZE + coluna;
             store_matrix(valor, linha, coluna, 0);
-            *WR_ptr = 0;
         }
     }
 
@@ -61,8 +61,7 @@ void print_matrix(int tamanho) {
     for (uint8_t i = 0; i < tamanho; i++) {
         for (uint8_t j = 0; j < tamanho; j++) {
             load_matrix(i, j, &res);
-            int8_t valor = *(int8_t *)DATA_OUT_ptr;
-            printf("%4d ", valor);
+            printf("%4d ", res.value);
         }
         printf("\n");
     }
@@ -73,10 +72,14 @@ uint16_t read_element() {
     uint8_t linha, coluna;
     printf("Linha da matriz (0 a 4):\n");
     scanf("%hhu", &linha);
+    getchar(); // limpa buffer
     printf("Coluna da matriz (0 a 4):\n");
     scanf("%hhu", &coluna);
-    load_matrix(linha, coluna, &res);
-    return res.flags;
+    getchar(); // limpa buffer
+
+    uint16_t flags = load_matrix(linha, coluna, &res);
+    printf("Valor lido: %d\n", res.value);
+    return flags;
 }
 
 uint16_t write_elements() {
@@ -84,16 +87,18 @@ uint16_t write_elements() {
     int8_t num;
     printf("Id da matriz (0 a 1):\n");
     scanf("%hhu", &matriz_id);
+    getchar();
     printf("Linha da matriz (0 a 4):\n");
     scanf("%hhu", &linha);
+    getchar();
     printf("Coluna da matriz (0 a 4):\n");
     scanf("%hhu", &coluna);
+    getchar();
     printf("Elemento a ser escrito:\n");
     scanf("%hhd", &num);
-    *WR_ptr = 1;
-    uint16_t flags = store_matrix(num, linha, coluna, matriz_id);
-    *WR_ptr = 0;
-    return flags;
+    getchar();
+
+    return store_matrix(num, linha, coluna, matriz_id);
 }
 
 void menu() {
@@ -112,14 +117,13 @@ void menu() {
         printf("10 - Gerar matriz teste\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
+        getchar(); // limpa buffer após leitura da opção
 
         uint16_t flags = 0;
 
         switch (opcao) {
             case 1: {
                 flags = read_element();
-                int8_t valor = *(int8_t*)DATA_OUT_ptr;
-                printf("Valor lido: %d\n", valor);
                 CHECK_FLAGS(flags);
                 break;
             }
@@ -132,6 +136,7 @@ void menu() {
                 int8_t num;
                 printf("Digite o escalar:\n");
                 scanf("%hhd", &num);
+                getchar();
                 flags = mult_matrix_esc(num);
                 CHECK_FLAGS(flags);
                 break;
@@ -165,7 +170,11 @@ void menu() {
                 break;
             }
             case 9: {
-                print_matrix(5);
+                int num;
+                printf("Digite o tamanho da matriz quadrada");
+                scanf("%d", &num);
+                getchar(); // limpa '\n' restante
+                print_matrix(num);
                 break;
             }
             case 10: {

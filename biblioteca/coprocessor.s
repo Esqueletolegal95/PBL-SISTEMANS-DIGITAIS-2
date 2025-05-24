@@ -69,7 +69,7 @@ load_matrix:
     LDRH R3, [R3]        @ flags
 
     STRB R1, [R2]        @ MatrixResult.value
-    STRH R3, [R2, #1]    @ MatrixResult.flags
+    STRH R3, [R2, #2]    @ MatrixResult.flags
 
     MOV R0, R3           @ retorna flags
     POP {LR}

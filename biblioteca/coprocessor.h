@@ -22,6 +22,7 @@
  */
 typedef struct {
     int8_t value;      /**< Valor lido da matriz. */
+        /* 1 byte de padding automático aqui */
     uint16_t flags;    /**< Flags de status do coprocessador (bitmask). */
 } MatrixResult;
 
