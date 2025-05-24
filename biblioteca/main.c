@@ -70,18 +70,24 @@ int init_fpga_mapping() {
 void preencher_matriz_teste() {
     uint8_t size;
     size = MATRIX_SIZE;    
-    printf("✨ Preenchendo matriz 0 com valores de teste...\n");
+    printf("✨ Preenchendo matrizes com valores de teste...\n");
     for (uint8_t linha = 0; linha < size; linha++) {
         for (uint8_t coluna = 0; coluna < size; coluna++) {
-            int8_t valor = linha * size + coluna;
-            store_matrix(valor, linha, coluna, 2);
+            int8_t valor = linha*2  + coluna;
+            store_matrix(valor, linha, coluna, 0);
+        }
+    }
+    for (uint8_t linha = 0; linha < size; linha++) {
+        for (uint8_t coluna = 0; coluna < size; coluna++) {
+            int8_t valor = linha*2 + coluna;
+            store_matrix(valor, linha, coluna, 1);
         }
     }
     printf("✔️ Matriz preenchida com sucesso!\n");
 }
 
 void print_matrix(uint8_t tamanho) {
-    printf("Conteúdo da matriz 0:\n");
+    printf("Conteúdo da matriz:\n");
     for (uint8_t i = 0; i < tamanho; i++) {
         for (uint8_t j = 0; j < tamanho; j++) {
             int8_t valor = load_matrix(i, j);
