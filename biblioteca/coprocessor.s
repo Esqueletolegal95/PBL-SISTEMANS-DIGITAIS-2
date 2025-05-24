@@ -25,6 +25,9 @@
 .global reset_matriz
 .type reset_matriz, %function
 
+.global wait_done
+.type wait_done, %function
+
 .extern INSTRUCTION_ptr
 .extern FLAGS_ptr
 .extern WR_ptr
@@ -37,10 +40,24 @@ instruction:
     STR R0, [R1]
     BX LR
 
+@ ------------------------- wait_done()
+wait_done:
+    PUSH {R1, LR}
+wait_loop:
+    LDR R1, =FLAGS_ptr
+    LDR R1, [R1]
+    LDRH R1, [R1]
+    TST R1, #1          @ testa bit DONE (bit 0)
+    BEQ wait_loop       @ se não done, espera
+    POP {R1, LR}
+    BX LR
+
 @ ------------------------- not_operation()
 not_operation:
     MOV R0, #0
     BL instruction
+
+    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -59,6 +76,8 @@ load_matrix:
 
     MOV R0, R3
     BL instruction
+
+    BL wait_done
 
     LDR R3, =DATA_OUT_ptr
     LDR R3, [R3]
@@ -91,8 +110,10 @@ store_matrix:
     ADD R4, R4, R5
 
     ADD R0, R4, #2       @ opcode = 010
+
     LDR R4, =WR_ptr
     LDR R4, [R4]
+
     MOV R5, #1
     STRB R5, [R4]        @ WR = 1
 
@@ -100,6 +121,8 @@ store_matrix:
 
     MOV R5, #0
     STRB R5, [R4]        @ WR = 0
+
+    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -113,6 +136,8 @@ add_matrix:
     MOV R0, #3
     BL instruction
 
+    BL wait_done
+
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
     LDRH R0, [R0]
@@ -122,6 +147,8 @@ add_matrix:
 sub_matrix:
     MOV R0, #4
     BL instruction
+
+    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -135,6 +162,8 @@ mult_matrix_esc:
     ADD R0, R0, #5
     BL instruction
 
+    BL wait_done
+
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
     LDRH R0, [R0]
@@ -145,6 +174,8 @@ mult_matrix:
     MOV R0, #6
     BL instruction
 
+    BL wait_done
+
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
     LDRH R0, [R0]
@@ -154,6 +185,8 @@ mult_matrix:
 reset_matriz:
     MOV R0, #7
     BL instruction
+
+    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
