@@ -19,8 +19,8 @@
 .global mult_matrix_esc
 .type mult_matrix_esc, %function
 
-.global reset_matriz
-.type reset_matriz, %function
+.global reset_matrix
+.type reset_matrix, %function
 
 .global not_operation
 .type not_operation, %function
@@ -56,8 +56,8 @@ load_matrix:
     LSL R1, R1, #3      @ coluna << 3 → bits 3–5
     LSL R0, R0, #6      @ linha << 6  → bits 6–8
 
-    ADD R0, R1, R0      @ R0 = coluna shifted + linha shifted
-    ADD R0, R0, #1      @ opcode = 001 (LOAD)
+    ORR R0, R1, R0      @ R0 = coluna shifted OR linha shifted
+    ORR R0, R0, #1      @ opcode = 001 (LOAD)
 
     BL instruction      @ chama coprocessador
 
@@ -79,15 +79,15 @@ store_matrix:
 
     LSL R0, R0, #10       @ valor << 10
     LSL R1, R1, #7        @ linha << 7
-    ADD R0, R0, R1
+    ORR R0, R0, R1
 
     LSL R2, R2, #4        @ coluna << 4
-    ADD R0, R0, R2
+    ORR R0, R0, R2
 
     LSL R3, R3, #3        @ matriz << 3
-    ADD R0, R0, R3
+    ORR R0, R0, R3
 
-    ADD R0, R0, #2        @ opcode = 010 (STORE)
+    ORR R0, R0, #2        @ opcode = 010 (STORE)
 
     @ WR = 1
     LDR R4, =WR_ptr
@@ -140,7 +140,7 @@ mult_matrix_esc:
     STR LR, [SP]
 
     LSL R0, R0, #3       @ escalar nos bits 3–10
-    ADD R0, R0, #5       @ opcode = 101
+    ORR R0, R0, #5       @ opcode = 101
 
     BL instruction
 
@@ -162,7 +162,7 @@ mult_matrix:
     BX LR
 
 @ ------------------------- RST (111)
-reset_matriz:
+reset_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
