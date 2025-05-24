@@ -47,22 +47,23 @@ not_operation:
     BX LR
 
 @ ------------------------- LOAD (001)
-@ R0 = coluna
-@ R1 = linha
+@ R0 = linha
+@ R1 = coluna
 load_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    LSL R0, R0, #3      @ coluna << 3 → bits 3–5
-    LSL R1, R1, #6      @ linha << 6  → bits 6–8
-    ADD R0, R0, R1
-    ADD R0, R0, #1      @ opcode = 001
+    LSL R1, R1, #3      @ coluna << 3 → bits 3–5
+    LSL R0, R0, #6      @ linha << 6  → bits 6–8
 
-    BL instruction
+    ADD R0, R1, R0      @ R0 = coluna shifted + linha shifted
+    ADD R0, R0, #1      @ opcode = 001 (LOAD)
 
-    LDR R1 =DATA_OUT_ptr
-    LDR R1, [R1]
-    LDRSB R0, [R1]
+    BL instruction      @ chama coprocessador
+
+    LDR R3, =DATA_OUT_ptr
+    LDR R3, [R3]
+    LDRSB R0, [R3]      @ lê o valor (int8_t) e retorna em R0
 
     LDR LR, [SP]
     ADD SP, SP, #4
