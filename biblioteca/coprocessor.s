@@ -19,8 +19,8 @@
 .global mult_matrix_esc
 .type mult_matrix_esc, %function
 
-.global reset_matriz
-.type reset_matriz, %function
+.global reset_matrix
+.type reset_matrix, %function
 
 .global not_operation
 .type not_operation, %function
@@ -90,6 +90,7 @@ store_matrix:
 
     @ WR = 1
     LDR R4, =WR_ptr
+    LDR R4, [R4]      @ aqui carrega o valor do ponteiro
     MOV R5, #1
     STR R5, [R4]
 
@@ -98,6 +99,7 @@ store_matrix:
 
     @ WR = 0
     LDR R4, =WR_ptr
+    LDR R4, [R4]      @ carrega de novo o valor do ponteiro
     MOV R5, #0
     STR R5, [R4]
     
@@ -161,7 +163,7 @@ mult_matrix:
     BX LR
 
 @ ------------------------- RST (111)
-reset_matriz:
+reset_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
