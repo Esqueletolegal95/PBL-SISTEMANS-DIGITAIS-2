@@ -26,12 +26,7 @@
 .type not_operation, %function
 
 .extern INSTRUCTION_ptr
-
-.extern FLAGS_ptr
-
-.extern WR_ptr
-
-.extern DATA_OUT_ptr
+.extern DATA_OUT_ptr;
 
 @ ------------------------- NOP (000)
 not_operation:
@@ -47,23 +42,22 @@ not_operation:
     BX LR
 
 @ ------------------------- LOAD (001)
-@ R0 = linha
-@ R1 = coluna
+@ R0 = coluna
+@ R1 = linha
 load_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    LSL R1, R1, #3      @ coluna << 3 → bits 3–5
-    LSL R0, R0, #6      @ linha << 6  → bits 6–8
+    LSL R0, R0, #3      @ coluna << 3 → bits 3–5
+    LSL R1, R1, #6      @ linha << 6  → bits 6–8
+    ADD R0, R0, R1
+    ADD R0, R0, #1      @ opcode = 001
 
-    ORR R0, R1, R0      @ R0 = coluna shifted OR linha shifted
-    ORR R0, R0, #1      @ opcode = 001 (LOAD)
-
-    BL instruction      @ chama coprocessador
+    BL instruction
 
     LDR R3, =DATA_OUT_ptr
     LDR R3, [R3]
-    LDRSB R0, [R3]      @ lê o valor (int8_t) e retorna em R0
+    LDRSB R0, [R3]      @ lê o valor da matriz como int8_t e coloca em R0
 
     LDR LR, [SP]
     ADD SP, SP, #4
@@ -79,29 +73,18 @@ store_matrix:
 
     LSL R0, R0, #10       @ valor << 10
     LSL R1, R1, #7        @ linha << 7
-    ORR R0, R0, R1
+    ADD R0, R0, R1
 
     LSL R2, R2, #4        @ coluna << 4
-    ORR R0, R0, R2
+    ADD R0, R0, R2
 
     LSL R3, R3, #3        @ matriz << 3
-    ORR R0, R0, R3
+    ADD R0, R0, R3
 
-    ORR R0, R0, #2        @ opcode = 010 (STORE)
+    ADD R0, R0, #2        @ opcode = 010 (STORE)
 
-    @ WR = 1
-    LDR R4, =WR_ptr
-    MOV R5, #1
-    STR R5, [R4]
-
-    @ Executa a instrução
     BL instruction
 
-    @ WR = 0
-    LDR R4, =WR_ptr
-    MOV R5, #0
-    STR R5, [R4]
-    
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -140,7 +123,7 @@ mult_matrix_esc:
     STR LR, [SP]
 
     LSL R0, R0, #3       @ escalar nos bits 3–10
-    ORR R0, R0, #5       @ opcode = 101
+    ADD R0, R0, #5       @ opcode = 101
 
     BL instruction
 
