@@ -30,17 +30,6 @@
 .extern WR_ptr
 .extern DATA_OUT_ptr
 
-@ ------------------------- wait_done()
-@ Aguarda FLAGS[0] == 1 (bit "DONE")
-wait_done:
-    LDR R1, =FLAGS_ptr
-    LDR R1, [R1]
-wait_loop:
-    LDRH R2, [R1]
-    TST R2, #1
-    BEQ wait_loop
-    BX LR
-
 @ ------------------------- instruction()
 instruction:
     LDR R1, =INSTRUCTION_ptr
@@ -52,7 +41,6 @@ instruction:
 not_operation:
     MOV R0, #0
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -71,7 +59,6 @@ load_matrix:
 
     MOV R0, R3
     BL instruction
-    BL wait_done
 
     LDR R3, =DATA_OUT_ptr
     LDR R3, [R3]
@@ -82,7 +69,7 @@ load_matrix:
     LDRH R3, [R3]        @ flags
 
     STRB R1, [R2]        @ MatrixResult.value
-    STRH R3, [R2, #2]    @ MatrixResult.flags
+    STRH R3, [R2, #1]    @ MatrixResult.flags
 
     MOV R0, R3           @ retorna flags
     POP {LR}
@@ -110,7 +97,6 @@ store_matrix:
     STRB R5, [R4]        @ WR = 1
 
     BL instruction
-    BL wait_done
 
     MOV R5, #0
     STRB R5, [R4]        @ WR = 0
@@ -126,7 +112,6 @@ store_matrix:
 add_matrix:
     MOV R0, #3
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -137,7 +122,6 @@ add_matrix:
 sub_matrix:
     MOV R0, #4
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -150,7 +134,6 @@ mult_matrix_esc:
     LSL R0, R0, #3
     ADD R0, R0, #5
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -161,7 +144,6 @@ mult_matrix_esc:
 mult_matrix:
     MOV R0, #6
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
@@ -172,7 +154,6 @@ mult_matrix:
 reset_matriz:
     MOV R0, #7
     BL instruction
-    BL wait_done
 
     LDR R0, =FLAGS_ptr
     LDR R0, [R0]
