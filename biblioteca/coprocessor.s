@@ -27,6 +27,12 @@
 
 .extern INSTRUCTION_ptr
 
+.extern FLAGS_ptr
+
+.extern WR_ptr
+
+.extern DATA_OUT_ptr
+
 @ ------------------------- NOP (000)
 not_operation:
     SUB SP, SP, #4
@@ -54,6 +60,10 @@ load_matrix:
 
     BL instruction
 
+    LDR R1 =DATA_OUT_ptr
+    LDR R1, [R1]
+    LDRSB R0, [R1]
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -78,8 +88,19 @@ store_matrix:
 
     ADD R0, R0, #2        @ opcode = 010 (STORE)
 
+    @ WR = 1
+    LDR R4, =WR_ptr
+    MOV R5, #1
+    STR R5, [R4]
+
+    @ Executa a instrução
     BL instruction
 
+    @ WR = 0
+    LDR R4, =WR_ptr
+    MOV R5, #0
+    STR R5, [R4]
+    
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
