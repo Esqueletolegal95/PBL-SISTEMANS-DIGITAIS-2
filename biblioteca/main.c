@@ -44,9 +44,11 @@ int init_fpga_mapping() {
 
 void preencher_matriz_teste() {
     printf("✨ Preenchendo matriz 0 com valores de teste...\n");
+    printf("DEBUG: MATRIX_SIZE = %d\n", MATRIX_SIZE);
 
-    for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
-        for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
+    for (int linha = 0; linha < MATRIX_SIZE; linha++) {
+        for (int coluna = 0; coluna < MATRIX_SIZE; coluna++) {
+            printf("DEBUG: linha = %d, coluna = %d\n", linha, coluna);
             int8_t valor = linha * MATRIX_SIZE + coluna;
             store_matrix(valor, linha, coluna, 0);
         }
@@ -54,6 +56,7 @@ void preencher_matriz_teste() {
 
     printf("✔️ Matriz preenchida com sucesso! Agora use a opção 9 pra ver\n");
 }
+
 
 void print_matrix(int tamanho) {
     MatrixResult res;
