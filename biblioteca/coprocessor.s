@@ -51,32 +51,31 @@ load_matrix:
 
     MOV R2, #0
 
-    @ Campo: coluna (3 bits) << 3 → bits 3–5
-    AND R0, R0, #0x07
-    LSL R0, R0, #3
-    ORR R2, R2, R0
+    @ coluna: bits 3–5
+    AND R3, R0, #0x07
+    LSL R3, R3, #3
+    ORR R2, R2, R3
 
-    @ Campo: linha (3 bits) << 6 → bits 6–8
-    AND R1, R1, #0x07
-    LSL R1, R1, #6
-    ORR R2, R2, R1
+    @ linha: bits 6–8
+    AND R3, R1, #0x07
+    LSL R3, R3, #6
+    ORR R2, R2, R3
 
-    @ Opcode = 0b001 (LOAD)
-    ORR R2, R2, #1
+    @ opcode: bits 0–2 = 0b001
+    ORR R2, R2, #0x1
 
     MOV R0, R2
     BL instruction
 
-    @ Idealmente, esperar FLAG_DONE aqui!
+    @ Espera opcional por FLAG_DONE
 
     LDR R3, =DATA_OUT_ptr
     LDR R3, [R3]
-    LDRSB R0, [R3]      @ lê valor com sinal
+    LDRSB R0, [R3]
 
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
-
 
 
 @ ------------------------- STORE (010)
@@ -88,39 +87,39 @@ store_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
-    @ Zera o registrador de instrução
     MOV R4, #0
 
-    @ Campo: valor (8 bits) << 10 → bits 10–17
-    AND R0, R0, #0xFF        @ Garante valor com sinal correto (int8_t para 8 bits)
-    LSL R0, R0, #10
-    ORR R4, R4, R0
+    @ valor: bits 10–17
+    AND R5, R0, #0xFF       @ int8_t para 8 bits sem sinal
+    LSL R5, R5, #10
+    ORR R4, R4, R5
 
-    @ Campo: linha (3 bits) << 7 → bits 7–9
-    AND R1, R1, #0x07
-    LSL R1, R1, #7
-    ORR R4, R4, R1
+    @ linha: bits 7–9
+    AND R5, R1, #0x07
+    LSL R5, R5, #7
+    ORR R4, R4, R5
 
-    @ Campo: coluna (3 bits) << 4 → bits 4–6
-    AND R2, R2, #0x07
-    LSL R2, R2, #4
-    ORR R4, R4, R2
+    @ coluna: bits 4–6
+    AND R5, R2, #0x07
+    LSL R5, R5, #4
+    ORR R4, R4, R5
 
-    @ Campo: matriz (1 bit) << 3 → bit 3
-    AND R3, R3, #0x01
-    LSL R3, R3, #3
-    ORR R4, R4, R3
+    @ matriz: bit 3
+    AND R5, R3, #0x01
+    LSL R5, R5, #3
+    ORR R4, R4, R5
 
-    @ Campo: opcode (3 bits) = 0b010 → bits 0–2
-    ORR R4, R4, #2
+    @ opcode: bits 0–2 = 0b010
+    ORR R4, R4, #0x2
 
-    @ Chama função que escreve no registrador de instrução
+    @ Enviar instrução
     MOV R0, R4
     BL instruction
 
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
+
 
 
 @ ------------------------- ADD (011)
