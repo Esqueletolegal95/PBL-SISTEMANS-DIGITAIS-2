@@ -72,18 +72,18 @@ void preencher_matriz_teste() {
     for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
         for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
             int8_t valor = linha * MATRIX_SIZE + coluna;
-            store_matrix(valor, linha, coluna, 0);
+            store_matrix(valor, linha, coluna, 2);
         }
     }
     printf("✔️ Matriz preenchida com sucesso!\n");
 }
 
-void print_matrix(int tamanho) {
+void print_matrix(uint8_t tamanho) {
     printf("Conteúdo da matriz 0:\n");
     for (uint8_t i = 0; i < tamanho; i++) {
         for (uint8_t j = 0; j < tamanho; j++) {
             int8_t valor = load_matrix(i, j);
-            printf("%4d ", valor);
+            printf("%hhu ", valor);
         }
         printf("\n");
     }
@@ -166,9 +166,9 @@ void menu() {
                 break;
             }
             case 8: {
-                int size;
+                uint8_t size;
                 printf("Tamanho da matriz: ");
-                scanf("%d", &size); getchar();
+                scanf("%hhu", &size); getchar();
                 print_matrix(size);
                 break;
             }
