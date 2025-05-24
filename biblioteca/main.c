@@ -129,6 +129,7 @@ void menu() {
         printf("7 - Ver valor de saída\n");
         printf("8 - Imprimir matriz\n");
         printf("9 - Preencher matriz de teste\n");
+        printf("10 - Resetar matrizes (via coprocessador)\n");
         printf("0 - Sair\n");
         printf("Escolha uma opção: ");
 
@@ -174,6 +175,11 @@ void menu() {
             case 9:
                 preencher_matriz_teste();
                 break;
+            case 11: {
+                reset_matrix();
+                break;
+                }
+
             case 0:
                 printf("Saindo...\n");
                 exit(0);
