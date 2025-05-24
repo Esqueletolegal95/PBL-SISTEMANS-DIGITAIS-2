@@ -68,10 +68,12 @@ int init_fpga_mapping() {
 }
 
 void preencher_matriz_teste() {
+    uint8_t size;
+    size = MATRIX_SIZE;    
     printf("✨ Preenchendo matriz 0 com valores de teste...\n");
-    for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
-        for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
-            int8_t valor = linha * MATRIX_SIZE + coluna;
+    for (uint8_t linha = 0; linha < size; linha++) {
+        for (uint8_t coluna = 0; coluna < size; coluna++) {
+            int8_t valor = linha * size + coluna;
             store_matrix(valor, linha, coluna, 2);
         }
     }
@@ -83,7 +85,7 @@ void print_matrix(uint8_t tamanho) {
     for (uint8_t i = 0; i < tamanho; i++) {
         for (uint8_t j = 0; j < tamanho; j++) {
             int8_t valor = load_matrix(i, j);
-            printf("%hhu ", valor);
+            printf("%hhd ", valor);
         }
         printf("\n");
     }
@@ -167,8 +169,7 @@ void menu() {
             }
             case 8: {
                 uint8_t size;
-                printf("Tamanho da matriz: ");
-                scanf("%hhu", &size); getchar();
+                size = MATRIX_SIZE;
                 print_matrix(size);
                 break;
             }
