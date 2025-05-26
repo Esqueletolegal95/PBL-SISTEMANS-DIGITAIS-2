@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#define FLAG_DONE            (1 << 0)  /**< Bit 0: operação concluída com sucesso. */
+#define FLAG_OVERFLOW        (1 << 1)  /**< Bit 1: estouro de valor durante a operação. */
+#define FLAG_INCORRECT_ADDR  (1 << 2)  /**< Bit 2: endereço inválido acessado. */
+
 // Escreve valores em uma matriz.
 // id usa 1 bit para a matriz, 3 bits para a linha e 3 bits para a coluna.
 void store_matrix(int8_t num, uint8_t linha, uint8_t coluna, uint8_t matrix);

@@ -19,13 +19,19 @@
 .global mult_matrix_esc
 .type mult_matrix_esc, %function
 
-.global reset_matriz
-.type reset_matriz, %function
+.global reset_matrix
+.type reset_matrix, %function
 
 .global not_operation
 .type not_operation, %function
 
 .extern INSTRUCTION_ptr
+
+.extern FLAGS_ptr
+
+.extern WR_ptr
+
+.extern DATA_OUT_ptr
 
 @ ------------------------- NOP (000)
 not_operation:
@@ -54,6 +60,10 @@ load_matrix:
 
     BL instruction
 
+    LDR R1 =DATA_OUT_ptr
+    LDR R1, [R1]
+    LDRSB R0, [R1]
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -78,8 +88,21 @@ store_matrix:
 
     ADD R0, R0, #2        @ opcode = 010 (STORE)
 
+    @ WR = 1
+    LDR R4, =WR_ptr
+    LDR R4, [R4]      @ aqui carrega o valor do ponteiro
+    MOV R5, #1
+    STR R5, [R4]
+
+    @ Executa a instrução
     BL instruction
 
+    @ WR = 0
+    LDR R4, =WR_ptr
+    LDR R4, [R4]      @ carrega de novo o valor do ponteiro
+    MOV R5, #0
+    STR R5, [R4]
+    
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -140,7 +163,7 @@ mult_matrix:
     BX LR
 
 @ ------------------------- RST (111)
-reset_matriz:
+reset_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
