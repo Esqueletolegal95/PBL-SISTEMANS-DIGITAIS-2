@@ -67,23 +67,29 @@ int init_fpga_mapping() {
     return 0;
 }
 
-void preencher_matriz_teste() {
-    uint8_t size;
-    size = MATRIX_SIZE;    
-    printf("✨ Preenchendo matrizes com valores de teste...\n");
-    for (uint8_t linha = 0; linha < size; linha++) {
-        for (uint8_t coluna = 0; coluna < size; coluna++) {
-            int8_t valor = linha*2  + coluna;
+void preencher_matriz_usuario() {
+    printf("Digite os elementos da matriz 0 (5 linhas com 5 números inteiros separados por espaço):\n");
+    for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
+        printf("Linha %d: ", linha);
+        for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
+            int8_t valor;
+            scanf("%hhd", &valor);
             store_matrix(valor, linha, coluna, 0);
         }
     }
-    for (uint8_t linha = 0; linha < size; linha++) {
-        for (uint8_t coluna = 0; coluna < size; coluna++) {
-            int8_t valor = linha*2 + coluna;
+
+    printf("\nAgora digite os elementos da matriz 1 (5 linhas com 5 números inteiros separados por espaço):\n");
+    for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
+        printf("Linha %d: ", linha);
+        for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
+            int8_t valor;
+            scanf("%hhd", &valor);
             store_matrix(valor, linha, coluna, 1);
         }
     }
-    printf("✔️ Matriz preenchida com sucesso!\n");
+
+    getchar(); // Consumir o Enter final
+    printf("✔️ Matrizes carregadas com sucesso, hmpf!\n");
 }
 
 void print_matrix(uint8_t tamanho) {
@@ -180,7 +186,7 @@ void menu() {
                 break;
             }
             case 9:
-                preencher_matriz_teste();
+                preencher_matriz_usuario();
                 break;
             case 10: {
                 reset_matrix();
