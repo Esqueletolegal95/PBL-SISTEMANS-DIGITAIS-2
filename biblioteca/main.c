@@ -12,10 +12,10 @@
 #define LW_BRIDGE_SPAN 0x1000
 #define MATRIX_SIZE 5
 
-extern volatile uint32_t *INSTRUCTION_ptr;
-extern volatile uint32_t *FLAGS_ptr;
-extern volatile uint32_t *WR_ptr;
-extern volatile uint32_t *DATA_OUT_ptr;
+volatile uint32_t *INSTRUCTION_ptr;
+volatile uint32_t *FLAGS_ptr;
+volatile uint32_t *WR_ptr;
+volatile uint32_t *DATA_OUT_ptr;
 
 pthread_t flag_thread;
 uint16_t last_flags = 0;
@@ -43,7 +43,7 @@ void *flag_watcher(void *arg) {
     }
     return NULL;
 }
-/*
+
 int init_fpga_mapping() {
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
     if (fd == -1) {
@@ -66,7 +66,7 @@ int init_fpga_mapping() {
     close(fd);
     return 0;
 }
-*/
+
 void preencher_matriz_teste() {
     uint8_t size;
     size = MATRIX_SIZE;    
@@ -201,7 +201,7 @@ void menu() {
 }
 
 int main() {
-    if (map_fpga() != 0) {
+    if (init_fpga_mapping() != 0) {
         printf("Erro ao mapear FPGA.\n");
         return -1;
     }
