@@ -43,7 +43,7 @@ void *flag_watcher(void *arg) {
     }
     return NULL;
 }
-
+/*
 int init_fpga_mapping() {
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
     if (fd == -1) {
@@ -66,7 +66,7 @@ int init_fpga_mapping() {
     close(fd);
     return 0;
 }
-
+*/
 void preencher_matriz_teste() {
     uint8_t size;
     size = MATRIX_SIZE;    
