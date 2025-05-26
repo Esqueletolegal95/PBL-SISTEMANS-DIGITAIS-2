@@ -64,6 +64,8 @@ load_matrix:
     LDR R1, [R1]
     LDRSB R0, [R1]
 
+    BL wait_done
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -103,6 +105,8 @@ store_matrix:
     MOV R5, #0
     STR R5, [R4]
     
+    BL wait_done
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -117,6 +121,8 @@ add_matrix:
 
     BL instruction
 
+    BL wait_done
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -129,6 +135,8 @@ sub_matrix:
     MOV R0, #4           @ opcode = 100
 
     BL instruction
+
+    BL wait_done
 
     LDR LR, [SP]
     ADD SP, SP, #4
@@ -145,6 +153,8 @@ mult_matrix_esc:
 
     BL instruction
 
+    BL wait_done
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -158,6 +168,8 @@ mult_matrix:
 
     BL instruction
 
+    BL wait_done
+
     LDR LR, [SP]
     ADD SP, SP, #4
     BX LR
@@ -170,6 +182,8 @@ reset_matrix:
     MOV R0, #7           @ opcode = 111
 
     BL instruction
+
+    BL wait_done
 
     LDR LR, [SP]
     ADD SP, SP, #4
@@ -187,3 +201,22 @@ instruction:
     LDR R1, [SP]
     ADD SP, SP, #4
     BX LR
+
+wait_done:
+    SUB SP, SP, #8
+    STR R0, [SP]
+    STR R1, [SP, #4]
+
+wait_loop:
+    LDR R1, =FLAGS_ptr
+    LDR R1, [R1]
+    LDR R0, [R1]
+    TST R0, #0x04
+    BEQ wait_loop
+
+    BL not_operation
+
+    LDR R0, [SP]
+    LDR R1, [SP, #4]
+    ADD SP, SP, #8
+    BX LR 
