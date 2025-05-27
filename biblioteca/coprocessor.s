@@ -25,6 +25,9 @@
 .global not_operation
 .type not_operation, %function
 
+.global wait_done
+.type wait_done, %function
+
 .extern INSTRUCTION_ptr
 
 .extern FLAGS_ptr
@@ -60,7 +63,7 @@ load_matrix:
 
     BL instruction
 
-    LDR R1 =DATA_OUT_ptr
+    LDR R1, =DATA_OUT_ptr
     LDR R1, [R1]
     LDRSB R0, [R1]
 
@@ -78,6 +81,7 @@ store_matrix:
     SUB SP, SP, #4
     STR LR, [SP]
 
+    SXTB R0, R0       
     LSL R0, R0, #10       @ valor << 10
     LSL R1, R1, #7        @ linha << 7
     ADD R0, R0, R1
@@ -211,7 +215,9 @@ wait_loop:
     LDR R1, =FLAGS_ptr
     LDR R1, [R1]
     LDR R0, [R1]
-    TST R0, #0x04
+    AND R0, R0, #1
+    CMP R0, #1
+
     BEQ wait_loop
 
     BL not_operation
