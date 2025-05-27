@@ -218,6 +218,9 @@ wait_loop:
 
     BEQ wait_loop
 
+    LDR R1, [SP]
+    ADD SP, SP, #4
+    
     BL not_operation
 
     LDR R0, [SP]
