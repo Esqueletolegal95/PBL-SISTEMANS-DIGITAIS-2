@@ -207,13 +207,11 @@ instruction:
     BX LR
 
 wait_done:
-    SUB SP, SP, #8
-    STR R0, [SP]
-    STR R1, [SP, #4]
+    SUB SP, SP, #4
+    STR R1, [SP]
 
 wait_loop:
     LDR R1, =FLAGS_ptr
-    LDR R1, [R1]
     LDR R0, [R1]
     AND R0, R0, #1
     CMP R0, #1
