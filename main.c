@@ -85,11 +85,11 @@ void preencher_matriz_usuario() {
     for (uint8_t linha = 0; linha < MATRIX_SIZE; linha++) {
         for (uint8_t coluna = 0; coluna < MATRIX_SIZE; coluna++) {
             scanf("%hhd", &valor);
-            store_matrix(valor, linha, coluna, 0);
+            store_matrix(valor, linha, coluna, 1);
         }
     }
     getchar();
-    printf("✔️ Matrizes carregadas com sucesso, tsc... nem foi difícil, né?!\n");
+    printf("✔️ Matrizes carregadas com sucesso!\n");
 }
 
 
@@ -129,7 +129,7 @@ void write_element() {
     scanf("%hhd", &num); getchar();
 
     store_matrix(num, linha, coluna, matriz_id);
-}
+}1
 
 void menu() {
     while (1) {
