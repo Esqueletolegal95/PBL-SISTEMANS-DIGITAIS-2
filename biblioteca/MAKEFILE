@@ -3,7 +3,7 @@ TARGET = main
 
 # Compilador e flags
 CC = gcc
-CFLAGS = -Wall -O2 -march=armv7-a
+CFLAGS = -Wall -march=armv7-a -O0
 LDFLAGS = -lpthread            # Adicionado para suportar pthread
 AS = as
 ASFLAGS = -march=armv7-a
