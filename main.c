@@ -147,7 +147,6 @@ void menu() {
         printf("10 - Resetar matrizes (via coprocessador)\n");
         printf("0 - Sair\n");
         printf("Escolha uma opção: ");
-	not_operation();
 
         int opcao;
         scanf("%d", &opcao); getchar();
