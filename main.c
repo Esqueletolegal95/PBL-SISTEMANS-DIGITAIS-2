@@ -129,7 +129,7 @@ void write_element() {
     scanf("%hhd", &num); getchar();
 
     store_matrix(num, linha, coluna, matriz_id);
-}1
+}
 
 void menu() {
     while (1) {

@@ -7,14 +7,24 @@
 #define FLAG_OVERFLOW        (1 << 1)  /**< Bit 1: estouro de valor durante a operação. */
 #define FLAG_INCORRECT_ADDR  (1 << 2)  /**< Bit 2: endereço inválido acessado. */
 
+/*Indica a não realização de operações pelo processador*/
 void not_operation(void);
 
-// Escreve valores em uma matriz.
-// id usa 1 bit para a matriz, 3 bits para a linha e 3 bits para a coluna.
+/* Escreve valores em uma matriz (A ou B).
+ *num: valor a ser escrito na matrix
+ *linha: linha da matriz onde o valor será escrito(0 a 4)
+ *coluna: colina da matriz onde o valor será escrito(0 a 4)
+ *matrix: bit que indica a matríx(0 ou 1)
+*/
+
 void store_matrix(int8_t num, uint8_t linha, uint8_t coluna, uint8_t matrix);
 
-// Lê um valor de uma matriz usando o identificador.
-// id usa 3 bits para a coliuna e 3 bits para a linha.
+/*Carrega o valor desejado da matriz C para data_out
+ *linha: linha da matriz onde o valor será carregado(0 a 4)
+ *coluna: colina da matriz onde o valor será carregado(0 a 4)
+ *retorno: valor de data_out
+*/
+
 int8_t load_matrix(uint8_t linha, uint8_t coluna);
 
 // Multiplica uma matriz por um número escalar.
