@@ -1,7 +1,7 @@
-# Nome do Projeto
+# Biblioteca de comunicação entre o HPS e FPGA com o Coprocessador
 
-Uma descrição curta e impactante do seu projeto. ✨
-
+Esse segundo problema do MI- Sistemas Digitais tem como o foco o desenvolvimento de uma biblioteca que fará a comunicação entre o HPS (Hard Processor System) e o FPGA (Field Programmable Gate Array) da placa DE1-SoC, para que seja possível o uso do coprocessador desenvolvido em verilog. Essa comunicação se faz pelo Plataform designer, configurando PIO's (Paralel Input/Outpur), e mapeados usando barramento AXI. Essa configuração permite o envio de instruções e leitura de dados do coprocessador.
+link do coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025-1
 ## 📸 Preview (opcional)
 
 > Pode adicionar uma imagem ou GIF do seu projeto em ação!
