@@ -5,11 +5,16 @@ O segundo problema da disciplina de MI - Sistemas Digitais tem como foco o desen
 A configuração dos PIOs permite o envio de instruções ao coprocessador, bem como a leitura de dados resultantes das operações executadas. Dessa forma, o objetivo principal é fornecer uma interface de software que abstraia os detalhes de hardware e permita que programadores de alto nível interajam com o coprocessador, integrando-o a aplicações escritas em linguagem C.
 
 Link do coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025-1
-## 📸 Preview (opcional)
+## Plataform Designer e PIOs
 
-> Pode adicionar uma imagem ou GIF do seu projeto em ação!
+Foram feitos 4 PIO's no Platform Designer:
+-Inputs
+  -Data_out: 8 bits
+  -Flags: 3 bits
+-Outputs
+  -Instruction: 18 bits
+  -WR: 1 bit
 
-![preview](caminho/da/imagem.gif)
 
 ## 🛠️ Funcionalidades
 
