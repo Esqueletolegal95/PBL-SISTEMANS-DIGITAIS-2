@@ -3,6 +3,7 @@
 O segundo problema da disciplina de MI - Sistemas Digitais tem como foco o desenvolvimento de uma biblioteca de software responsável por viabilizar a comunicação entre o HPS (Hard Processor System) e o FPGA (Field Programmable Gate Array) da placa DE1-SoC. Essa comunicação é realizada por meio do Platform Designer, utilizando interfaces PIO (Parallel Input/Output) mapeadas no barramento AXI.
 
 A configuração dos PIOs permite o envio de instruções ao coprocessador, bem como a leitura de dados resultantes das operações executadas. Dessa forma, o objetivo principal é fornecer uma interface de software que abstraia os detalhes de hardware e permita que programadores de alto nível interajam com o coprocessador, integrando-o a aplicações escritas em linguagem C.
+
 Link do coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025-1
 ## 📸 Preview (opcional)
 
