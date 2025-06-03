@@ -8,12 +8,12 @@ Link do coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025
 ## Plataform Designer e PIOs
 
 Foram feitos 4 PIO's no Platform Designer:
--Inputs
-  -Data_out: 8 bits
-  -Flags: 3 bits
--Outputs
-  -Instruction: 18 bits
-  -WR: 1 bit
+- Inputs
+  - Data_out: 8 bits
+  - Flags: 3 bits
+- Outputs
+  - Instruction: 18 bits
+  - WR: 1 bit
 
 
 ## 🛠️ Funcionalidades
