@@ -10,7 +10,7 @@ Link do coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025
 Foram feitos 4 PIO's no Platform Designer:
 - Inputs
   - Data_out: 8 bits
-  - Flags: 3 bits
+  - Flags (Done, overflow e incorrect address): 3 bits
 - Outputs
   - Instruction: 18 bits
   - WR: 1 bit
@@ -30,7 +30,14 @@ A biblioteca oferencce as seguintes funções, onde são feitas as formatações
   - Escrita
 
 
-## 🚀 Como usar
+## Testes
+Foram realizados os seguintes testes pelo programa em C
+- Escrita de matriz
+- Leitura de matriz
+- Multiplicação escalar com e sem overflow
+- Adição de matrizes
+- Subtração de matrizes
+- Reset de matrizes
 
 ### Pré-requisitos
 
