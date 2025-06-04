@@ -16,11 +16,19 @@ Foram feitos 4 PIO's no Platform Designer:
   - WR: 1 bit
 
 
-## 🛠️ Funcionalidades
+## Biblioteca Assembly
+A biblioteca oferencce as seguintes funções, onde são feitas as formatações das instruções com shift:
+- Aritméticas:
+  - Soma
+  - Subtração
+  - Multiplicação
+  - Multiplicação por escalar
+  - Reset
 
-- [x] Funcionalidade legal 1
-- [x] Funcionalidade fofa 2
-- [ ] Coisas que ainda vai fazer
+- Leitura/Escrita: 
+  - Leitura
+  - Escrita
+
 
 ## 🚀 Como usar
 
