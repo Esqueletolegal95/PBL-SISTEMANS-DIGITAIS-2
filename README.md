@@ -39,19 +39,14 @@ Foram realizados os seguintes testes pelo programa em C
 - Subtração de matrizes
 - Reset de matrizes
 
-### Pré-requisitos
+## Pré-requisitos
 
 - Algo que precisa instalar (`npm`, `python`, `gcc`, etc.)
 - Outro requisito
 
-### Instalação
+## Referências
 
-```bash
-# Clone este repositório
-git clone https://github.com/usuario/repositorio
-
-# Acesse a pasta do projeto
-cd repositorio
-
-# Instale as dependências (se for o caso)
-npm install
+- DE1-SoC User Manual - Terasic
+- ARM Architecture Reference Manual - ARMv7
+- Quartus Prime Lite 23.1 Documentation
+- Github do Coprocessador: https://github.com/DestinyWolf/CoProcessador_PBL2_SD_2025-1
