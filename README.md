@@ -39,10 +39,10 @@ Foram realizados os seguintes testes pelo programa em C
 - Subtração de matrizes
 - Reset de matrizes
 
-## Pré-requisitos
+## Instalação
 
-- Algo que precisa instalar (`npm`, `python`, `gcc`, etc.)
-- Outro requisito
+- 
+
 
 ## Referências
 
