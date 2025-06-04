@@ -39,9 +39,6 @@ Foram realizados os seguintes testes pelo programa em C
 - Subtração de matrizes
 - Reset de matrizes
 
-## Instalação
-
-- 
 
 
 ## Referências
